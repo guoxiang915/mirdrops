@@ -35,7 +35,7 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
   drops.forEach((drop) => {
     drop.data?.forEach((item: any) => {
       data.push(
-        newContractMsg(item.address || "", {
+        newContractMsg(drop.airdrop || "", {
           claim: {
             stage: item.stage,
             amount: item.amount,
@@ -47,7 +47,6 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
       )
     })
   })
-  console.log(data)
 
   /* result */
   // const parseTx = useTradeReceipt(Type.BUY, totalRewards)

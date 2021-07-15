@@ -89,7 +89,9 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
         case "Anchor": {
           const drops = await fetch(
             `${drop.api}/get?address=${address}&chainId=${DROPS_CHAIN_ID}`
-          ).then((result) => result.json())
+          )
+            .then((result) => result.json())
+            .then((result) => result.filter((drop: any) => drop.claimable))
           const value = drops.reduce(
             (prev: string, drop: any) => plus(prev, drop.amount),
             "0"
