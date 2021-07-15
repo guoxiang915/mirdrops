@@ -47,7 +47,7 @@ const Dashboard = () => {
       setLoading(false)
       setTotal(
         Object.values(drops).reduce(
-          (prev, cur) => plus(prev, cur.value || "0"),
+          (prev, cur) => plus(prev, cur.ust || "0"),
           "0"
         )
       )
