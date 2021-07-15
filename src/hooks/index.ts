@@ -1,5 +1,4 @@
 export { useContractsAddress } from "./useContractsAddress"
-export { useSettings } from "./useSettings"
 export { useContract, useResult } from "./useContract"
 
 export { default as useNetwork } from "./useNetwork"

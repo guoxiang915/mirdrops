@@ -9,7 +9,7 @@ import { UUSD } from "../constants"
 import { gt, plus, sum } from "../libs/math"
 import useHash from "../libs/useHash"
 import extension, { PostResponse } from "../terra/extension"
-import { useContract, useNetwork, useSettings, useAddress } from "../hooks"
+import { useContract, useNetwork, useAddress } from "../hooks"
 import useTax from "../graphql/useTax"
 
 import Container from "../components/Container"
@@ -20,7 +20,6 @@ import Button from "../components/Button"
 import Count from "../components/Count"
 import { TooltipIcon } from "../components/Tooltip"
 
-import Caution from "./Caution"
 import Result from "./Result"
 import ConfirmTable from "../components/ConfirmTable"
 import Modal, { useModal } from "../containers/Modal"
@@ -99,8 +98,6 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
   /* context */
   const { hash } = useHash()
   const { fee } = useNetwork()
-  const { agreementState } = useSettings()
-  const [hasAgreed] = agreementState
 
   const { uusd, result } = useContract()
   const address = useAddress()
@@ -118,9 +115,6 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
       : undefined
 
   /* confirm */
-  const [confirming, setConfirming] = useState(false)
-  const confirm = () => (hasAgreed ? submit() : setConfirming(true))
-  const cancel = () => setConfirming(false)
 
   /* submit */
   const [submitted, setSubmitted] = useState(false)
@@ -146,7 +140,6 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
 
   /* reset */
   const reset = () => {
-    setConfirming(false)
     setSubmitted(false)
     setResponse(undefined)
   }
@@ -161,7 +154,7 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
   const render = (children: ReactNode | ((button: ReactNode) => ReactNode)) => {
     const next = address
       ? {
-          onClick: confirm,
+          onClick: submit,
           children: label ?? hash ?? "Submit",
           loading: submitted,
           disabled,
@@ -243,11 +236,7 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
           />
         ) : (
           <form {...attrs} onSubmit={handleSubmit}>
-            {confirming && resultForm === "form" ? (
-              <Caution goBack={cancel} onAgree={submit} />
-            ) : (
-              render(children)
-            )}
+            {render(children)}
           </form>
         )}
       </Container>
@@ -265,12 +254,6 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
               }}
               successLink={successLink}
             />
-          </Modal>
-        ) : confirming ? (
-          <Modal {...modal} isOpen>
-            <form {...attrs} onSubmit={handleSubmit}>
-              <Caution goBack={cancel} onAgree={submit} />
-            </form>
           </Modal>
         ) : null)}
       <ConnectListModal {...modal} />
