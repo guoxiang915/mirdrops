@@ -1,0 +1,24 @@
+{
+  "Form": {
+    "Button": {
+      "ConnectWallet": "Connect Wallet"
+    }
+  },
+  "Result": {
+    "TIMEOUT": "The execution of this transaction is taking a little longer than usual. It has been successfully broadcasted, but have not been executed yet. The transaction may fail in the future, so please check again later",
+    "DENIED": "Denied by the user",
+    "Button": { "FAILURE": "Try Again" }
+  },
+
+  "Wallet": {
+    "Connect": "Connect Wallet",
+    "TerraFinder": "Terra Finder"
+  },
+  "Network": {
+    "NoContract": "Terra Drops contracts could not be found on the selected network. Select a different network from the Terra Station extension."
+  },
+
+  "App": {
+    "TestnetAlert": "You are currently on the \"tequila-0004\" network which is not the mainnet."
+  }
+}

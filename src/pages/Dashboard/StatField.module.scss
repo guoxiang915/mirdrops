@@ -1,0 +1,22 @@
+@import "mixins";
+
+.wrapper {
+  @include flex(space-between, center);
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  color: #d6d6d6;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.value {
+  font-size: 24px;
+  line-height: 27px;
+  font-weight: 500;
+}

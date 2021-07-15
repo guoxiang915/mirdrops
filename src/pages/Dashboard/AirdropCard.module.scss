@@ -1,0 +1,70 @@
+@import "mixins";
+
+.card {
+  background: rgba(245, 245, 245, 0.65);
+  border-radius: 9px;
+
+  & > section {
+    padding: 20px 16px;
+  }
+}
+
+.label {
+  @include flex(flex-start);
+  margin-bottom: 20px;
+
+  .logo {
+    background: #000;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+
+  .title {
+    color: #000;
+    font-size: 24px;
+    line-height: 27px;
+    font-weight: 500;
+    margin-left: 5px;
+  }
+}
+
+.value {
+  @include flex(space-between);
+
+  .tokens {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .token {
+      color: #000;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 700;
+    }
+
+    .ust {
+      margin-top: 4px;
+      color: rgba(0, 0, 0, 0.25);
+      font-size: 12px;
+      line-height: 15px;
+      font-weight: 400;
+    }
+  }
+
+  .button {
+    color: #f5f5f5;
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 500;
+    background: #202020;
+    border-radius: 999px;
+    width: 110px;
+    height: 30px;
+
+    &.coming {
+      pointer-events: none;
+    }
+  }
+}

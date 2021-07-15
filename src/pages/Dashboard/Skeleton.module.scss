@@ -1,0 +1,14 @@
+@import "mixins";
+
+.skeleton {
+  width: 60px;
+  height: 15px;
+  border-radius: 1px;
+
+  &.title {
+    background: #ececec;
+  }
+  &.subtitle {
+    background: #f3f3f3;
+  }
+}

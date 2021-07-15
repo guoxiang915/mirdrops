@@ -1,0 +1,54 @@
+@import "mixins";
+
+.modal {
+  width: 450px;
+
+  > div {
+    max-width: unset;
+  }
+
+  form > div > section {
+    padding: 45px 70px 55px !important;
+  }
+
+  .title {
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 27px;
+    color: black;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .radio {
+    margin-top: 40px;
+    padding: 0px 16px;
+  }
+
+  .space {
+    margin-bottom: 30px;
+  }
+
+  .formIcon {
+    transform: rotate(90deg);
+  }
+
+  .symbol {
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 500;
+  }
+
+  .submit {
+    background: black;
+    color: white;
+    width: 110px;
+    height: 30px;
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 500;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px;
+  }
+}

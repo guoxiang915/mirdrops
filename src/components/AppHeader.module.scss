@@ -1,0 +1,128 @@
+@import "mixins";
+@import "variables";
+
+$padding: 15px;
+
+.header {
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+@include mobile {
+  .header {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+  }
+
+  .collapsed {
+    position: sticky;
+  }
+}
+
+.container {
+  padding-top: 15px;
+  @include desktop {
+    @include flex(space-between);
+  }
+}
+
+.wrapper {
+  @include flex(space-between);
+}
+
+.logo {
+  @include flex;
+  height: 120px;
+  color: #202020;
+  font-size: 36px;
+  line-height: 40px;
+  font-weight: 500;
+  > svg {
+    width: 40px;
+    height: 45px;
+    margin-right: 10px;
+  }
+}
+
+.badge {
+  margin-left: 8px;
+}
+
+.toggle {
+  @include flex;
+
+  @include desktop {
+    display: none;
+  }
+}
+
+.support {
+  @include desktop {
+    @include flex;
+  }
+
+  @include mobile {
+    .collapsed & {
+      display: none;
+    }
+  }
+}
+
+.mobileMenu {
+  @include desktop {
+    display: none;
+  }
+
+  @include mobile {
+    @include flex(flex-start, flex-start);
+    flex-direction: column;
+    margin-bottom: 24px;
+
+    .collapsed & {
+      display: none;
+    }
+  }
+}
+
+.connect {
+  @include flex;
+  padding-left: 15px;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.claim {
+  margin-left: 16px;
+  height: 34px;
+}
+
+.hr {
+  margin: 0;
+}
+
+.networkAlert {
+  @include flex(center);
+
+  background: #eee;
+  padding: 10px;
+}
+
+.alertText {
+  @include flex;
+
+  color: gray;
+  font-size: 14px;
+  font-weight: 500;
+
+  i {
+    margin-right: 7px;
+  }
+}

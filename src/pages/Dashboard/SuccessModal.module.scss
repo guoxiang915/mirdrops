@@ -1,0 +1,59 @@
+@import "mixins";
+@import "variables";
+
+.modal {
+  width: 450px;
+
+  > div {
+    max-width: unset;
+  }
+
+  .card {
+    > section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 45px 70px 55px !important;
+    }
+
+    .message {
+      font-weight: 600;
+      font-size: 22px;
+      line-height: 27px;
+      margin-bottom: 24px;
+      color: black;
+    }
+
+    .congrats {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 48px;
+      }
+
+      .tmirrorticles {
+        & > canvas {
+          z-index: 1 !important;
+        }
+      }
+    }
+
+    button {
+      background: black;
+      color: white;
+      width: 110px;
+      height: 30px;
+      font-size: 12px;
+      line-height: 15px;
+      font-weight: 500;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0px;
+    }
+  }
+}

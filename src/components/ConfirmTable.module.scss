@@ -1,0 +1,45 @@
+@import "mixins";
+
+.list {
+  background: #232630;
+  border-radius: $border-radius;
+  font-size: 12px;
+  padding: 20px;
+  color: $slate;
+
+  &:not(:first-child) {
+    margin-top: 30px;
+  }
+}
+
+.item:not(:first-child) {
+  margin-top: 10px;
+}
+
+.headerTitle {
+  font-weight: bold;
+  &:not(:first-child) {
+    text-align: right;
+  }
+}
+
+.article {
+  @include flex(space-between);
+  > * {
+    width: 33%;
+    &:nth-child(2) {
+      // color: red;
+      margin-left: -17%;
+    }
+  }
+}
+
+.title {
+  color: $slate;
+  font-weight: bold;
+}
+
+.content {
+  color: $slate;
+  text-align: right;
+}

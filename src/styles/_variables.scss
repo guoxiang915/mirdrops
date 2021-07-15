@@ -1,0 +1,70 @@
+/* Colors */
+$bg: white !default;
+$white: white !default;
+
+$gray: #cccccc !default;
+$brown: #a0a0a0 !default;
+$light: #d6d6d6 !default;
+$battleship: #838383 !default;
+$slate: #a9aeb8 !default;
+$slate-origin: #505466 !default;
+$wet-slate: #2d323e !default;
+$slate-dark: #252934 !default;
+
+$success: #2fb466 !default;
+$green: #35de83 !default;
+$blue: #1eb2ff !default;
+$aqua: #47d7e2 !default;
+// $red: #e64c57 !default;
+$red: #d54747 !default;
+$green: #f26c4f !default;
+// $green: #0d0f14 !default;
+
+$text: black !default;
+$button: white !default;
+$header: white !default;
+$checkbox: #a3a7b1 !default;
+$saturated-blue: saturate(darken($white, 2%), 6%);
+
+$colors: (
+  bg: $bg,
+  darkblue: $white,
+  battleship: $battleship,
+  slate: $slate,
+  green: $green,
+  blue: $blue,
+  aqua: $aqua,
+  red: $red,
+  orange: $green,
+);
+
+$hr-shadow: fade-out(black, 0.8);
+$hr: fade-out(black, 0.92);
+$border: 1px solid fade-out($slate, 0.8);
+$border-radius: 4px;
+
+/* Fonts */
+$font-size: 14px;
+$font-family: "Poppins";
+
+/* Sizes */
+$max-width: 1200px !default;
+$modal-width: 620px;
+$breakpoint: 992px;
+$gutter: 30px;
+$line-height: 1.5;
+$nav-height: 70px;
+$footer-height: 50px;
+$footer-height-mobile: 100px;
+
+$card-padding-horizontal: 35px;
+$card-padding-header: 20px $card-padding-horizontal;
+$card-padding-main: $card-padding-header;
+
+/* Transitions */
+$transition-duration: 0.2s;
+
+/* Z-indexes */
+$zindex-sticky: 1020;
+
+@import "../customize";

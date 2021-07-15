@@ -1,0 +1,18 @@
+@import "mixins";
+
+.button {
+  @include flex(flex-start);
+  @include transition(color);
+  color: $slate;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+}
+
+.on {
+  color: $blue;
+}
+
+.toggle {
+  margin-right: 7px;
+}
