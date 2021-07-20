@@ -86,3 +86,14 @@ export const GET_ANCHOR_PRICE = gql`
     }
   }
 `
+
+export const GET_ANCHOR_CLAIMED = gql`
+  query __isClaimed($ANCTerraswap: String!, $poolInfoQuery: String!) {
+    isClaimed: WasmContractsContractAddressStore(
+      ContractAddress: $ANCTerraswap
+      QueryMsg: $poolInfoQuery
+    ) {
+      Result
+    }
+  }
+`

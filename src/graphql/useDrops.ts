@@ -2,7 +2,12 @@ import "dotenv/config"
 import { ApolloClient, InMemoryCache } from "@apollo/client"
 import { DefaultApolloClientOptions } from "../layouts/Network"
 import { TerraDrop } from "../pages/Dashboard/AirdropCard"
-import { GET_ANCHOR_PRICE, GET_MIRROR_DROPS, GET_MIRROR_PRICE } from "./gqldocs"
+import {
+  GET_ANCHOR_CLAIMED,
+  GET_ANCHOR_PRICE,
+  GET_MIRROR_DROPS,
+  GET_MIRROR_PRICE,
+} from "./gqldocs"
 import { DROPS_CHAIN_ID } from "../constants"
 import { toAmount } from "../libs/parse"
 import { div, plus, times } from "../libs/math"
@@ -92,15 +97,44 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
           )
             .then((result) => result.json())
             .then((result) => result.filter((drop: any) => drop.claimable))
-          const value = drops.reduce(
+
+          const ancMantleUrl = "https://mantle.anchorprotocol.com"
+          const ancClient = getDropClient(ancMantleUrl)
+
+          const filteredDrops: any[] = []
+          await Promise.all(
+            drops.map(async (item: any) => {
+              const result = await ancClient.query({
+                query: GET_ANCHOR_CLAIMED,
+                variables: {
+                  ANCTerraswap: drop.airdrop,
+                  poolInfoQuery: JSON.stringify({
+                    is_claimed: {
+                      address,
+                      stage: item.stage,
+                    },
+                  }),
+                },
+                fetchPolicy: "no-cache",
+              })
+
+              const { is_claimed } = JSON.parse(result.data?.isClaimed.Result)
+
+              if (!is_claimed) {
+                filteredDrops.push(item)
+              }
+            })
+          )
+
+          const value = filteredDrops.reduce(
             (prev: string, drop: any) => plus(prev, drop.amount),
             "0"
           )
           return {
             value,
-            count: drops.length || 0,
+            count: filteredDrops.length || 0,
             ust: times(value, price),
-            data: drops,
+            data: filteredDrops,
           }
         }
         case "Pylon": {
