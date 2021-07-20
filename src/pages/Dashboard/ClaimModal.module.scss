@@ -9,6 +9,10 @@
 
   form > div > section {
     padding: 45px 70px 55px !important;
+
+    @include mobile {
+      padding: 24px !important;
+    }
   }
 
   .title {

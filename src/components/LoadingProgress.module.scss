@@ -1,0 +1,36 @@
+@import "mixins";
+
+@keyframes dots {
+  0%,
+  20% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  40% {
+    color: $green;
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  60% {
+    text-shadow: 0.25em 0 0 $green, 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  80%,
+  100% {
+    text-shadow: 0.25em 0 0 $green, 0.5em 0 0 $green;
+  }
+}
+
+.container {
+  width: 100%;
+  padding: 8px 0px;
+  border: 1px solid $green;
+  border-radius: 999px;
+  color: $green;
+  text-align: center;
+  font-size: 14px;
+  line-height: 18px;
+
+  &:after {
+    content: " .";
+    animation: dots 1s steps(5, end) infinite;
+  }
+}

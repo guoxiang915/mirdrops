@@ -13,6 +13,7 @@ import { UUSD } from "../constants"
 import { useClaim } from "../hooks/useClaim"
 import { useModal } from "../containers/Modal"
 import SuccessModal from "./Dashboard/SuccessModal"
+import Loading from "./Loading"
 
 const Dashboard = () => {
   const address = useAddress()
@@ -67,68 +68,76 @@ const Dashboard = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.stats}>
-        <Grid>
-          <StatField
-            label="Total Value"
-            value={`${lookup(total, UUSD)} UST`}
-            loading={loading}
-          />
-          <StatField
-            label="Unclaimed"
-            value={String(count)}
-            loading={loading}
-          />
-          <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-            <ToggleButton
-              label="Coming Soon"
-              checked={comingSoon}
-              onCheck={setComingSoon}
+    <>
+      <div className={styles.container}>
+        <div className={styles.stats}>
+          <Grid>
+            <StatField
+              label="Total Value"
+              value={`${lookup(total, UUSD)} UST`}
+              loading={loading}
             />
-          </div>
-        </Grid>
+            <StatField
+              label="Unclaimed"
+              value={String(count)}
+              loading={loading}
+            />
+            <div
+              style={{ display: "flex", alignItems: "center", width: "100%" }}
+            >
+              <ToggleButton
+                label="Coming Soon"
+                checked={comingSoon}
+                onCheck={setComingSoon}
+              />
+            </div>
+          </Grid>
+        </div>
+
+        {main && (
+          <Grid wrap={3}>
+            {Object.keys(drops).map((index: string) => (
+              <AirdropCard
+                key={drops[index].protocol}
+                address={address}
+                drop={drops[index]}
+                onLoad={(drop) => handleLoad(index, drop)}
+                onClaim={() => handleClaim(drops[index])}
+              />
+            ))}
+          </Grid>
+        )}
+
+        {comingSoon && soon && (
+          <Grid wrap={3}>
+            {(Object.values(soon) as TerraDrop[]).map((drop: TerraDrop) => (
+              <AirdropCard key={drop.protocol} drop={drop} />
+            ))}
+          </Grid>
+        )}
+
+        {claimDrops?.length > 0 && (
+          <ClaimModal
+            modal={claimModal}
+            title={`Claim ${
+              claimDrops.length > 1
+                ? "All"
+                : `${claimDrops[0].protocol} Airdrop`
+            }`}
+            drops={Object.values(claimDrops)}
+            onSuccess={() => {
+              claimModal.close()
+              successModal.open()
+              setDrops({ ...main })
+            }}
+          />
+        )}
+
+        <SuccessModal modal={successModal} message="Success" label="Done" />
       </div>
 
-      {main && (
-        <Grid wrap={3}>
-          {Object.keys(drops).map((index: string) => (
-            <AirdropCard
-              key={drops[index].protocol}
-              address={address}
-              drop={drops[index]}
-              onLoad={(drop) => handleLoad(index, drop)}
-              onClaim={() => handleClaim(drops[index])}
-            />
-          ))}
-        </Grid>
-      )}
-
-      {comingSoon && soon && (
-        <Grid wrap={3}>
-          {(Object.values(soon) as TerraDrop[]).map((drop: TerraDrop) => (
-            <AirdropCard key={drop.protocol} drop={drop} />
-          ))}
-        </Grid>
-      )}
-
-      {claimDrops?.length > 0 && (
-        <ClaimModal
-          modal={claimModal}
-          title={`Claim ${
-            claimDrops.length > 1 ? "All" : `${claimDrops[0].protocol} Airdrop`
-          }`}
-          drops={Object.values(claimDrops)}
-          onSuccess={() => {
-            claimModal.close()
-            successModal.open()
-            setDrops({ ...main })
-          }}
-        />
-      )}
-
-      <SuccessModal modal={successModal} message="Success" label="Done" />
-    </div>
+      {loading && <Loading />}
+    </>
   )
 }
 

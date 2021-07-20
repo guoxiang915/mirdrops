@@ -1,0 +1,47 @@
+@import "mixins";
+
+.container {
+  @include flex;
+  flex-direction: column;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1200;
+  background: white;
+}
+
+.title {
+  @include flex;
+  height: 100px;
+  color: #202020;
+  font-size: 36px;
+  line-height: 40px;
+  font-weight: 500;
+  > svg {
+    width: 40px;
+    height: 45px;
+    margin-right: 10px;
+  }
+
+  @include mobile {
+    height: 50px;
+    font-size: 24px;
+    line-height: 30px;
+    margin-bottom: 8px;
+    > svg {
+      width: 30px;
+      height: 33px;
+    }
+  }
+}
+
+.loader {
+  width: 250px;
+  font-weight: 500;
+
+  @include mobile {
+    width: 175px;
+  }
+}
