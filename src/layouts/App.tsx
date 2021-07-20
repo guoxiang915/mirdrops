@@ -7,6 +7,7 @@ import useAddress from "../hooks/useAddress"
 import Header from "./Header"
 import "./App.scss"
 import { ClaimProvider, useClaimState } from "../hooks/useClaim"
+import Footer from "./Footer"
 
 const App = () => {
   const address = useAddress()
@@ -21,6 +22,7 @@ const App = () => {
         <ClaimProvider value={claim}>
           <Header />
           <Container>{routes()}</Container>
+          <Footer />
         </ClaimProvider>
       </StatsProvider>
     </ContractProvider>

@@ -1,0 +1,11 @@
+@import "variables";
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: $light;
+  font-size: 10px;
+  line-height: 12px;
+  padding: 22px 0px;
+}
