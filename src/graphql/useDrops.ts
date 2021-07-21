@@ -94,9 +94,8 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
         case "Anchor": {
           const drops = await fetch(
             `${drop.api}/get?address=${address}&chainId=${DROPS_CHAIN_ID}`
-          )
-            .then((result) => result.json())
-            .then((result) => result.filter((drop: any) => drop.claimable))
+          ).then((result) => result.json())
+          //  .then((result) => result.filter((drop: any) => drop.claimable))
 
           const ancMantleUrl = "https://mantle.anchorprotocol.com"
           const ancClient = getDropClient(ancMantleUrl)
