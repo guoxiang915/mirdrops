@@ -14,14 +14,17 @@ import { useClaim } from "../hooks/useClaim"
 import { useModal } from "../containers/Modal"
 import SuccessModal from "./Dashboard/SuccessModal"
 import Loading from "./Loading"
+import ConnectListModal from "../layouts/ConnectListModal"
 
 const Dashboard = () => {
   const address = useAddress()
   const { main, soon } = useDropslist()
   const [comingSoon, setComingSoon] = useState(true)
-  const [total, setTotal] = useState<string>()
-  const [count, setCount] = useState<number>()
+  const [total, setTotal] = useState<string>("0")
+  const [count, setCount] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(true)
+
+  const [loader, setLoader] = useState<boolean>(true)
 
   const {
     drops,
@@ -37,6 +40,12 @@ const Dashboard = () => {
       setDrops(main)
     }
   }, [main, setDrops])
+
+  useEffect(() => {
+    if (main && Object.values(main)?.length) {
+      setLoader(!!address && loading)
+    }
+  }, [main, setLoader, loading, address])
 
   const handleLoad = (key: string, drop: TerraDrop) => {
     drops[key] = drop
@@ -64,7 +73,6 @@ const Dashboard = () => {
     } else {
       openClaim(Object.values(drops))
     }
-    claimModal.open()
   }
 
   return (
@@ -116,27 +124,37 @@ const Dashboard = () => {
           </Grid>
         )}
 
-        {claimDrops?.length > 0 && (
-          <ClaimModal
-            modal={claimModal}
-            title={`Claim ${
-              claimDrops.length > 1
-                ? "All"
-                : `${claimDrops[0].protocol} Airdrop`
-            }`}
-            drops={Object.values(claimDrops)}
-            onSuccess={() => {
-              claimModal.close()
-              successModal.open()
-              setDrops({ ...main })
-            }}
-          />
-        )}
+        {claimDrops?.length > 0 &&
+          (address ? (
+            <ClaimModal
+              modal={claimModal}
+              title={`Claim ${
+                claimDrops.length > 1
+                  ? "All"
+                  : `${claimDrops[0].protocol} Airdrop`
+              }`}
+              drops={Object.values(claimDrops)}
+              onSuccess={() => {
+                claimModal.close()
+                successModal.open()
+                setDrops({ ...main })
+              }}
+            />
+          ) : (
+            <ConnectListModal {...claimModal} />
+          ))}
 
-        <SuccessModal modal={successModal} message="Success" label="Done" />
+        <SuccessModal
+          modal={successModal}
+          message="Success"
+          label="Done"
+          onDone={() => {
+            window.location.reload()
+          }}
+        />
       </div>
 
-      {loading && <Loading />}
+      {loader && <Loading />}
     </>
   )
 }

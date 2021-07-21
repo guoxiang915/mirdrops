@@ -12,10 +12,12 @@ const SuccessModal = ({
   message,
   label = "Finish",
   modal,
+  onDone,
 }: {
   message: string
   label?: string
   modal: Modal
+  onDone?: VoidFunction
 }) => {
   const particlesInit = (tmirrorticles: any) => {
     loadConfettiShape(tmirrorticles)
@@ -126,7 +128,13 @@ const SuccessModal = ({
             }}
           />
         </div>
-        <Button onClick={() => modal.close()} size="lg">
+        <Button
+          onClick={() => {
+            onDone?.()
+            modal.close()
+          }}
+          size="lg"
+        >
           {label}
         </Button>
       </Card>
