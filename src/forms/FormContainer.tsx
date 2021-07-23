@@ -6,7 +6,7 @@ import { Msg } from "@terra-money/terra.js"
 import MESSAGE from "../lang/MESSAGE.json"
 import Tooltip from "../lang/Tooltip.json"
 import { UUSD } from "../constants"
-import { gt, plus, sum } from "../libs/math"
+import { gt, sum } from "../libs/math"
 import useHash from "../libs/useHash"
 import extension, { PostResponse } from "../terra/extension"
 import { useContract, useNetwork, useAddress } from "../hooks"
@@ -164,12 +164,9 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
           children: MESSAGE.Form.Button.ConnectWallet,
         }
 
-    console.log(tax, fee.amount)
-
     const txFee = (
       <Count symbol={UUSD} dp={6}>
-        {/* {plus(tax, fee.amount)} */}
-        {String(fee.amount)}
+        {String(uusdAmount)}
       </Count>
     )
 

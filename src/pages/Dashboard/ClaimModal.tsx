@@ -60,7 +60,7 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
     data,
     disabled: !drops.length,
   }
-  const tax = { pretax: UUSD }
+  const tax = { pretax: UUSD, deduct: true }
 
   return (
     <Modal {...modal} className={styles.modal}>
