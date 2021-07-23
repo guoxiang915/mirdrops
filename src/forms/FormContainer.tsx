@@ -164,9 +164,12 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
           children: MESSAGE.Form.Button.ConnectWallet,
         }
 
+    console.log(tax, fee.amount)
+
     const txFee = (
       <Count symbol={UUSD} dp={6}>
-        {plus(tax, fee.amount)}
+        {/* {plus(tax, fee.amount)} */}
+        {String(fee.amount)}
       </Count>
     )
 
