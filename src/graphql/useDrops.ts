@@ -160,7 +160,7 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
             )
           return {
             value,
-            count: 1,
+            count: data.length,
             ust: times(value, price),
             data,
           }
