@@ -14,7 +14,7 @@ const networks: Record<string, MirrorNetworkInfo> = {
       bsc: "terra1g6llg3zed35nd3mh9zx6n64tfw3z67w2c48tn2",
     },
     limitOrder: "terra1zpr8tq3ts96mthcdkukmqq4y9lhw0ycevsnw89",
-    fee: { gasPrice: 0.0015, amount: 1000 }, // 0.001000 UST
+    fee: { gasPrice: 0.2, amount: 200000 }, // 0.001000 UST
   },
   testnet: {
     name: "testnet",
