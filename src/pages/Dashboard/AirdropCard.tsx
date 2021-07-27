@@ -62,6 +62,9 @@ const AirdropCard = ({ drop, onClaim, address, onLoad }: Props) => {
       <div className={styles.label}>
         <img src={drop.icon} className={styles.logo} alt={drop.protocol} />
         <div className={styles.title}>{drop.protocol}</div>
+        {drop.protocol === "Pylon" && (
+          <div className={styles.subtitle}>claim all not supported</div>
+        )}
       </div>
 
       <div className={styles.value}>

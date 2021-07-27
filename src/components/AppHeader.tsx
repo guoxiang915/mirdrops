@@ -60,11 +60,34 @@ const AppHeader = ({ logo, connect, border, testnet }: Props) => {
           </section>
 
           <section className={styles.support}>
+            <a
+              href="https://defynelabs.notion.site/TerraDrops-55898600df064e85a67783ab151b252c"
+              target="_blank"
+              className={cx(styles.faq, styles.desktopOnly)}
+              rel="noreferrer"
+            >
+              FAQ
+            </a>
+
             <div className={styles.connect}>{connect}</div>
 
-            <Button onClick={claimAll} type="button" className={styles.claim}>
-              Claim All
-            </Button>
+            <div className={styles.claim}>
+              <a
+                href="https://defynelabs.notion.site/TerraDrops-55898600df064e85a67783ab151b252c"
+                target="_blank"
+                className={cx(styles.faq, styles.mobileOnly)}
+                rel="noreferrer"
+              >
+                FAQ
+              </a>
+              <Button
+                onClick={claimAll}
+                type="button"
+                className={styles.claimButton}
+              >
+                Claim All
+              </Button>
+            </div>
           </section>
         </div>
 

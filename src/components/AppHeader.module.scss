@@ -78,25 +78,9 @@ $padding: 15px;
   }
 
   @include mobile {
-    @include flex(flex-end);
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-}
-
-.mobileMenu {
-  @include desktop {
-    display: none;
-  }
-
-  @include mobile {
-    @include flex(flex-start, flex-start);
+    @include flex(center, flex-end);
     flex-direction: column;
-    margin-bottom: 24px;
-
-    .collapsed & {
-      display: none;
-    }
+    margin-bottom: 16px;
   }
 }
 
@@ -112,6 +96,35 @@ $padding: 15px;
 }
 
 .claim {
+  @include flex;
+}
+
+.faq {
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  color: $green;
+  margin-right: 16px;
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
+
+  &.mobileOnly {
+    display: none;
+  }
+
+  @include mobile {
+    &.desktopOnly {
+      display: none;
+    }
+    &.mobileOnly {
+      display: block;
+    }
+  }
+}
+
+.claimButton {
   margin-left: 16px;
   height: 34px;
 }
