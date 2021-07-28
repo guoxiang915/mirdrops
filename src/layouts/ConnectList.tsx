@@ -56,7 +56,7 @@ const ConnectList = () => {
             {image}
           </button>
         ))}
-        <p className={styles.button}>More wallets comming soon...</p>
+        <p className={styles.button}>More wallets coming soon...</p>
       </section>
     </article>
   )
