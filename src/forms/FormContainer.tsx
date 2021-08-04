@@ -27,7 +27,6 @@ import ConnectListModal from "../layouts/ConnectListModal"
 import { LinkProps } from "../components/LinkButton"
 import { STATUS } from "../components/Wait"
 import useFee from "./../hooks/useFee"
-import { plus } from "./../libs/math"
 
 interface Props {
   data: Msg[]
@@ -176,7 +175,7 @@ export const FormContainer = ({
     const txFee = (
       <Count symbol={UUSD} dp={6}>
         {/* {String(uusdAmount)} */}
-        {plus(!deduct ? tax : 0, fee.amount)}
+        {sum([!deduct ? tax : 0, fee.amount])}
       </Count>
     )
 

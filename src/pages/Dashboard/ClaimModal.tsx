@@ -52,7 +52,6 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
   })
 
   /* result */
-  // const parseTx = useTradeReceipt(Type.BUY, totalRewards)
   const parseTx = undefined
   const container = {
     parseTx,
