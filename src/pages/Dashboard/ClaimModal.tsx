@@ -51,8 +51,6 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
     })
   })
 
-  console.log(totalAmount)
-
   /* result */
   // const parseTx = useTradeReceipt(Type.BUY, totalRewards)
   const parseTx = undefined
@@ -66,7 +64,7 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
     data,
     disabled: !drops.length,
   }
-  const tax = { pretax: totalAmount, deduct: data.length < 5 }
+  const tax = { pretax: totalAmount, deduct: true }
 
   return (
     <Modal {...modal} className={styles.modal}>
