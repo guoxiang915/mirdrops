@@ -138,7 +138,8 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
         }
         case "Pylon": {
           const drops = await fetch(`${drop.api}/airdrop/${address}`).then(
-            (result) => result.json()
+            (result) => result.json(),
+            () => ({})
           )
           const value = toAmount(drops.amount || 0)
           const data = await fetch(`${drop.api}/airdrop/${address}/claim`, {
@@ -148,15 +149,19 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
               amount: drops.amount || 0,
             }),
           })
-            .then((result) => result.json())
-            .then((result) =>
-              result.transactions.map((transaction: any) => {
-                const claim = JSON.parse(atob(transaction.value.execute_msg))
-                return {
-                  ...claim.claim,
-                  contract: transaction.value.contract,
-                }
-              })
+            .then(
+              (result) => result.json(),
+              () => ({})
+            )
+            .then(
+              (result) =>
+                result?.transactions?.map((transaction: any) => {
+                  const claim = JSON.parse(atob(transaction.value.execute_msg))
+                  return {
+                    ...claim.claim,
+                    contract: transaction.value.contract,
+                  }
+                }) || []
             )
           return {
             value,

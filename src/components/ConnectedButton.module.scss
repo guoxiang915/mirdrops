@@ -3,6 +3,7 @@
 .connected {
   @include flex(center, stretch);
   border-width: 1px;
+  width: unset;
 
   > * {
     @include flex;

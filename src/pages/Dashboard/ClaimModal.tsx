@@ -9,7 +9,7 @@ import useNewContractMsg from "../../terra/useNewContractMsg"
 import { TerraDrop } from "./AirdropCard"
 import Confirm from "../../components/Confirm"
 import { MsgExecuteContract } from "@terra-money/terra.js"
-import { plus } from "../../libs/math"
+import { plus, gt } from "../../libs/math"
 
 interface Props {
   title: string
@@ -19,16 +19,28 @@ interface Props {
 }
 
 const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
-  const amounts = drops.map((drop, index) => ({
-    title: drops.length > 1 ? index === 0 && "Amounts" : "Amount",
-    content: (
-      <div className={styles.symbol}>
-        <Count format={format} symbol={drop.symbol}>
-          {lookup(drop.value, UUSD)}
-        </Count>
-      </div>
-    ),
-  }))
+  let amounts = drops
+    .filter((drop) => gt(drop.value || "0", "0"))
+    .map((drop, index) => ({
+      title: "",
+      content: (
+        <div className={styles.symbol}>
+          <Count format={format} symbol={drop.symbol}>
+            {lookup(drop.value, UUSD)}
+          </Count>
+        </div>
+      ),
+    }))
+
+  if (amounts.length === 0) {
+    amounts = [
+      {
+        title: "Amount",
+        content: <></>,
+      },
+    ]
+  }
+  amounts[0].title = amounts.length === 1 ? "Amount" : "Amounts"
 
   /* submit */
   const newContractMsg = useNewContractMsg()

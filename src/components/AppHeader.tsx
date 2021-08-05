@@ -20,8 +20,6 @@ interface Props {
 const AppHeader = ({ logo, connect, border, testnet }: Props) => {
   const { key } = useLocation()
   const [isOpen, setIsOpen] = useState(false)
-  const toggle = () => setIsOpen(!isOpen)
-  const hideToggle = false //menu.every((item) => item.desktopOnly)
 
   const { openClaim } = useClaim()
 
@@ -51,12 +49,6 @@ const AppHeader = ({ logo, connect, border, testnet }: Props) => {
                 {logo} TerraDrops
               </Link>
             </h1>
-
-            {!hideToggle && (
-              <button className={styles.toggle} onClick={toggle}>
-                <Icon name={!isOpen ? "menu" : "close"} size={24} />
-              </button>
-            )}
           </section>
 
           <section className={styles.support}>
