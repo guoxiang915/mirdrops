@@ -20,6 +20,7 @@ export interface TerraDrop {
   ust?: string
   count?: number
   data?: any
+  app_url?: string
 }
 
 interface Props {
@@ -57,11 +58,24 @@ const AirdropCard = ({ drop, onClaim, address, onLoad }: Props) => {
     }
   }, [address, drop, onLoad, loading])
 
+  const handleOpenApp = () => {
+    if (drop.app_url) {
+      window.open(drop.app_url, "_blank")
+    }
+  }
+
   return (
     <Card className={styles.card}>
       <div className={styles.label}>
-        <img src={drop.icon} className={styles.logo} alt={drop.protocol} />
-        <div className={styles.title}>{drop.protocol}</div>
+        <img
+          src={drop.icon}
+          className={styles.logo}
+          alt={drop.protocol}
+          onClick={handleOpenApp}
+        />
+        <div className={styles.title} onClick={handleOpenApp}>
+          {drop.protocol}
+        </div>
         {drop.protocol === "Pylon" && (
           <div className={styles.subtitle}>claim all not supported</div>
         )}

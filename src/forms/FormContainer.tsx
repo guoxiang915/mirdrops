@@ -9,8 +9,8 @@ import { UUSD } from "../constants"
 import { gt, sum } from "../libs/math"
 import useHash from "../libs/useHash"
 import extension, { PostResponse } from "../terra/extension"
-import { useContract, useNetwork, useAddress } from "../hooks"
-import useTax from "../graphql/useTax"
+import { useContract, useAddress } from "../hooks"
+import useTax from "../hooks/useTax"
 
 import Container from "../components/Container"
 import Card from "../components/Card"
@@ -26,10 +26,12 @@ import Modal, { useModal } from "../containers/Modal"
 import ConnectListModal from "../layouts/ConnectListModal"
 import { LinkProps } from "../components/LinkButton"
 import { STATUS } from "../components/Wait"
+import useFee from "./../hooks/useFee"
 
 interface Props {
   data: Msg[]
   memo?: string
+  gasAdjust?: number
 
   /** Form information */
   contents?: Content[]
@@ -75,7 +77,12 @@ interface Props {
   onClickResult?: (status: STATUS) => void
 }
 
-export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
+export const FormContainer = ({
+  data: msgs,
+  memo,
+  gasAdjust,
+  ...props
+}: Props) => {
   const {
     contents,
     assetsContent,
@@ -93,20 +100,21 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
     onClickResult,
   } = props
   const { attrs, pretax, deduct, parseTx = () => [], successLink } = props
-  const modal = useModal()
 
   /* context */
+  const modal = useModal()
   const { hash } = useHash()
-  const { fee } = useNetwork()
 
   const { uusd, result } = useContract()
   const address = useAddress()
   const { loading } = result.uusd
 
   /* tax */
-  const tax = useTax(pretax)
+  const fee = useFee(msgs?.length, gasAdjust)
+  const { calcTax } = useTax()
+  const tax = pretax ? calcTax(pretax) : "0"
   const uusdAmount = !deduct
-    ? sum([pretax ?? "0", tax ?? "0", fee.amount])
+    ? sum([pretax ?? "0", tax, fee.amount])
     : fee.amount
 
   const invalid =
@@ -166,7 +174,8 @@ export const FormContainer = ({ data: msgs, memo, ...props }: Props) => {
 
     const txFee = (
       <Count symbol={UUSD} dp={6}>
-        {String(uusdAmount)}
+        {/* {String(uusdAmount)} */}
+        {sum([!deduct ? tax : 0, fee.amount])}
       </Count>
     )
 
