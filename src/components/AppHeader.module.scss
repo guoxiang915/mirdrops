@@ -96,6 +96,10 @@ $padding: 15px;
 
 .claim {
   @include flex;
+
+  @include mobile {
+    margin-bottom: 8px;
+  }
 }
 
 .faq {

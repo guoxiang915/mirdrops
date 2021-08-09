@@ -1,7 +1,7 @@
 import { ConnectType, useWallet } from "@terra-money/wallet-provider"
 import { ReactNode } from "react"
 import { ReactComponent as Terra } from "../images/Terra.svg"
-import WalletConnect from "../images/WalletConnect.png"
+// import WalletConnect from "../images/WalletConnect.png"
 import styles from "./ConnectList.module.scss"
 
 const size = { width: 24, height: 24 }
@@ -36,15 +36,16 @@ const ConnectList = () => {
           }
         : []
     )
-    .concat(
-      availableConnectTypes.includes(ConnectType.WALLETCONNECT)
-        ? {
-            label: "Terra Station (mobile)",
-            image: <img src={WalletConnect} {...size} alt="WalletConnect" />,
-            onClick: () => connect(ConnectType.WALLETCONNECT),
-          }
-        : []
-    )
+  // TODO: enable this and fix claiming issue on mobiles
+  // .concat(
+  //   availableConnectTypes.includes(ConnectType.WALLETCONNECT)
+  //     ? {
+  //         label: "Terra Station (mobile)",
+  //         image: <img src={WalletConnect} {...size} alt="WalletConnect" />,
+  //         onClick: () => connect(ConnectType.WALLETCONNECT),
+  //       }
+  //     : []
+  // )
 
   return (
     <article className={styles.component}>
