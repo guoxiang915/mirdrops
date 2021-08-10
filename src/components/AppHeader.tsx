@@ -46,7 +46,7 @@ const AppHeader = ({ logo, connect, border, testnet }: Props) => {
           <section className={styles.wrapper}>
             <h1>
               <Link to="/" className={styles.logo}>
-                {logo} TerraDrops
+                {logo} TerraDrops <span className={styles.version}>beta</span>
               </Link>
             </h1>
           </section>
