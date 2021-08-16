@@ -10,7 +10,7 @@ import {
 } from "./gqldocs"
 import { DROPS_CHAIN_ID } from "../constants"
 import { toAmount } from "../libs/parse"
-import { div, plus, times } from "../libs/math"
+import { div, plus, sum, times } from "../libs/math"
 
 export const getDropClient = (api: string) =>
   new ApolloClient({
@@ -53,7 +53,10 @@ export const getPrice = async (drop: TerraDrop) => {
             result.data?.ancPrice.Result
           )
 
-          return div(assets[0].amount || "1", total_share)
+          return div(
+            sum(assets.map((item: any) => item.amount)) || "0",
+            total_share
+          )
         }
         case "Pylon": {
           const result = await fetch(`${drop.api}/overview`).then((response) =>
