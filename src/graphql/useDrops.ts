@@ -49,14 +49,9 @@ export const getPrice = async (drop: TerraDrop) => {
             },
             fetchPolicy: "no-cache",
           })
-          const { assets, total_share } = JSON.parse(
-            result.data?.ancPrice.Result
-          )
+          const { assets } = JSON.parse(result.data?.ancPrice.Result)
 
-          return div(
-            sum(assets.map((item: any) => item.amount)) || "0",
-            total_share
-          )
+          return div(assets[1].amount || "0", assets[0].amount || "1")
         }
         case "Pylon": {
           const result = await fetch(`${drop.api}/overview`).then((response) =>
