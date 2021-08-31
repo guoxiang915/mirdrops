@@ -50,18 +50,30 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
     totalAmount = plus(drop.ust || "0", totalAmount)
     drop.data?.forEach((item: any) => {
       data.push(
-        newContractMsg(drop.airdrop || "", {
-          claim: {
-            stage: item.stage,
-            amount: item.amount,
-            proof: Array.isArray(item.proof)
-              ? item.proof
-              : JSON.parse(item.proof),
-          },
-        })
+        drop.protocol === "Mirror"
+          ? newContractMsg(drop.airdrop || "", {
+              [item.key]: {
+                stage: item.stage,
+                amount: item.amount,
+                proof: Array.isArray(item.proof)
+                  ? item.proof
+                  : JSON.parse(item.proof),
+              },
+            })
+          : newContractMsg(drop.airdrop || "", {
+              claim: {
+                stage: item.stage,
+                amount: item.amount,
+                proof: Array.isArray(item.proof)
+                  ? item.proof
+                  : JSON.parse(item.proof),
+              },
+            })
       )
     })
   })
+
+  console.log(data)
 
   /* result */
   const parseTx = undefined
