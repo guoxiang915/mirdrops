@@ -73,8 +73,6 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
     })
   })
 
-  console.log(data)
-
   /* result */
   const parseTx = undefined
   const container = {
