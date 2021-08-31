@@ -13,7 +13,7 @@ import {
 } from "./gqldocs"
 import { DROPS_CHAIN_ID } from "../constants"
 import { toAmount } from "../libs/parse"
-import { div, plus, sum, times } from "../libs/math"
+import { div, plus, times } from "../libs/math"
 
 export const getDropClient = (api: string) =>
   new ApolloClient({
