@@ -16,7 +16,7 @@ export const MINE = "MINE"
 export const TX_POLLING_INTERVAL = 1000
 
 /* pool:settings */
-export const DROPS_CHAIN_ID = "columbus-4"
+export const DROPS_CHAIN_ID = "columbus-5"
 export const POOL_REWARDS_CONTRACT =
   "terra10dx7437572d6t49zh9hgpjwq85p5mvj0awas5k"
 /* sentry */

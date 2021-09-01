@@ -4,7 +4,7 @@ type MirrorNetworkInfo = NetworkInfo & LocalNetworkConfig
 const networks: Record<string, MirrorNetworkInfo> = {
   mainnet: {
     name: "mainnet",
-    chainID: "columbus-4",
+    chainID: "columbus-5",
     lcd: "https://lcd.terra.dev",
     contract: "https://whitelist.mirror.finance/columbus.json",
     mantle: "https://mantle.terra.dev/",
