@@ -80,5 +80,9 @@
       pointer-events: none;
       background: #d8d8d8;
     }
+
+    &.disabled {
+      background: #a8a8a8;
+    }
   }
 }

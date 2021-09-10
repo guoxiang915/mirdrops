@@ -97,3 +97,33 @@ export const GET_ANCHOR_CLAIMED = gql`
     }
   }
 `
+
+export const GET_MIRROR_PRICE = gql`
+  query price {
+    MirrorTokenInfo {
+      price
+    }
+  }
+`
+
+export const GET_MIRROR_MIR_DROPS = gql`
+  query mirrorMirDrops($address: ID!) {
+    airdropMir(address: $address) {
+      stage
+      amount
+      claimable
+      proof
+    }
+  }
+`
+
+export const GET_MIRROR_LUNA_DROPS = gql`
+  query mirrorLunaDrops($address: ID!) {
+    airdropLuna(address: $address) {
+      stage
+      amount
+      claimable
+      proof
+    }
+  }
+`

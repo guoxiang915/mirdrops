@@ -7,10 +7,13 @@ import {
   GET_ANCHOR_PRICE,
   GET_MIRROR_DROPS,
   GET_MIRROR_PRICE,
+  GET_MIRROR_MIR_DROPS,
+  GET_MIRROR_LUNA_DROPS,
+  GET_MIRROR_PRICE,
 } from "./gqldocs"
 import { DROPS_CHAIN_ID } from "../constants"
 import { toAmount } from "../libs/parse"
-import { div, plus, sum, times } from "../libs/math"
+import { div, plus, times } from "../libs/math"
 
 export const getDropClient = (api: string) =>
   new ApolloClient({
@@ -59,17 +62,25 @@ export const getPrice = async (drop: TerraDrop) => {
           )
           return String(result.priceInUst)
         }
+        case "Mirror": {
+          const client = getDropClient(drop.api)
+          const result = await client.query({ query: GET_MIRROR_PRICE })
+
+          return String(result.data?.MirrorTokenInfo?.price)
+        }
       }
     }
   } catch (error) {
     throw new Error(error)
   }
+
+  return null
 }
 
 export const getDrops = async (address: string, drop: TerraDrop) => {
   try {
     const price = await getPrice(drop)
-    if (address && drop.api) {
+    if (price && address && drop.api) {
       switch (drop.protocol) {
         case "Mirror": {
           const client = getDropClient(drop.api)
@@ -168,11 +179,54 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
             data,
           }
         }
+        case "Mirror": {
+          const client = getDropClient(drop.api)
+          const mirDrops =
+            (
+              await client.query({
+                query: GET_MIRROR_MIR_DROPS,
+                variables: { address },
+                fetchPolicy: "no-cache",
+              })
+            ).data?.airdropMir || []
+
+          const lunaDrops =
+            (
+              await client.query({
+                query: GET_MIRROR_LUNA_DROPS,
+                variables: { address },
+                fetchPolicy: "no-cache",
+              })
+            ).data?.airdropLuna || []
+
+          const drops = [
+            ...mirDrops.map((item: any) => ({ ...item, key: "claim_for_mir" })),
+            ...lunaDrops.map((item: any) => ({
+              ...item,
+              key: "claim_for_luna",
+            })),
+          ].filter((item: any) => item.claimable)
+
+          const value = drops.reduce(
+            (prev: string, drop: any) => plus(prev, drop.amount),
+            "0"
+          )
+
+          return {
+            value,
+            count: drops.length,
+            ust: times(value, price),
+            data: drops,
+          }
+        }
       }
     }
   } catch (error) {
-    throw new Error(error)
+    console.log(error)
+    // throw new Error(error)
   }
+
+  return null
 }
 
 export default { getDropClient, getDrops, getPrice }

@@ -10,6 +10,7 @@ import { TerraDrop } from "./AirdropCard"
 import Confirm from "../../components/Confirm"
 import { MsgExecuteContract } from "@terra-money/terra.js"
 import { plus, gt } from "../../libs/math"
+import useFee from "../../hooks/useFee"
 
 interface Props {
   title: string
@@ -44,24 +45,40 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
 
   /* submit */
   const newContractMsg = useNewContractMsg()
-  const data: MsgExecuteContract[] = []
+  let data: MsgExecuteContract[] = []
   let totalAmount = "0"
   drops.forEach((drop) => {
     totalAmount = plus(drop.ust || "0", totalAmount)
     drop.data?.forEach((item: any) => {
       data.push(
-        newContractMsg(drop.airdrop || "", {
-          claim: {
-            stage: item.stage,
-            amount: item.amount,
-            proof: Array.isArray(item.proof)
-              ? item.proof
-              : JSON.parse(item.proof),
-          },
-        })
+        drop.protocol === "Mirror"
+          ? newContractMsg(drop.airdrop || "", {
+              [item.key]: {
+                stage: item.stage,
+                amount: item.amount,
+                proof: Array.isArray(item.proof)
+                  ? item.proof
+                  : JSON.parse(item.proof),
+              },
+            })
+          : newContractMsg(drop.airdrop || "", {
+              claim: {
+                stage: item.stage,
+                amount: item.amount,
+                proof: Array.isArray(item.proof)
+                  ? item.proof
+                  : JSON.parse(item.proof),
+              },
+            })
       )
     })
   })
+
+  /* gas limit */
+  const fee = useFee(data?.length)
+  if (fee.limit) {
+    data = data.slice(0, fee.limit)
+  }
 
   /* result */
   const parseTx = undefined
@@ -81,6 +98,12 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
     <Modal {...modal} className={styles.modal}>
       <FormContainer {...container} {...tax} onSuccess={onSuccess}>
         <div className={styles.title}>{title}</div>
+        {fee.limit && (
+          <div className={styles.limit}>
+            Only {fee.limit} airdrops can be claimed with this transaction, due
+            to gas limits.
+          </div>
+        )}
         <Confirm list={amounts} />
       </FormContainer>
     </Modal>

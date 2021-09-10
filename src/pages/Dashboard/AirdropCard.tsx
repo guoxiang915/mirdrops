@@ -47,7 +47,10 @@ const AirdropCard = ({ drop, onClaim, address, onLoad }: Props) => {
         const result = await getDrops(address, drop)
         onLoad?.({
           ...drop,
-          ...result,
+          ...(result || {
+            value: "",
+            ust: "",
+          }),
         })
         setLoading(false)
       }
@@ -84,14 +87,17 @@ const AirdropCard = ({ drop, onClaim, address, onLoad }: Props) => {
       <div className={styles.value}>
         <div className={styles.tokens}>
           <div className={styles.token}>
-            {coming || loading || drop.value === undefined ? (
+            {coming ||
+            loading ||
+            drop.value === undefined ||
+            drop.value === "" ? (
               <Skeleton />
             ) : (
               `${lookup(drop.value, drop.symbol)} ${drop.symbol}`
             )}
           </div>
           <div className={styles.ust}>
-            {coming || loading || drop.ust === undefined ? (
+            {coming || loading || drop.ust === undefined || drop.ust === "" ? (
               <Skeleton variant="subtitle" />
             ) : (
               `${lookup(drop.ust, UUSD)} UST`
@@ -100,8 +106,15 @@ const AirdropCard = ({ drop, onClaim, address, onLoad }: Props) => {
         </div>
 
         <button
-          className={classNames(styles.button, coming && styles.coming)}
+          className={classNames(
+            styles.button,
+            coming && styles.coming,
+            !coming &&
+              (loading || !drop.value || drop.value === "0") &&
+              styles.disabled
+          )}
           onClick={onClaim}
+          disabled={coming || loading || !drop.value || drop.value === "0"}
         >
           {coming ? "Coming Soon" : "Claim"}
         </button>
