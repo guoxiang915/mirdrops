@@ -15,6 +15,9 @@ export const MINE = "MINE"
 /* network:settings */
 export const TX_POLLING_INTERVAL = 1000
 
+/* gas:limit */
+export const GAS_MAX_AMOUNT = 10000000
+
 /* pool:settings */
 export const DROPS_CHAIN_ID = "columbus-5"
 export const POOL_REWARDS_CONTRACT =
