@@ -70,7 +70,7 @@ export const getPrice = async (drop: TerraDrop) => {
         }
       }
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error)
   }
 
@@ -151,27 +151,12 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
             () => ({})
           )
           const value = toAmount(drops.amount || 0)
-          const data = await fetch(`${drop.api}/airdrop/${address}/claim`, {
-            method: "POST",
-            body: JSON.stringify({
-              address,
-              amount: drops.amount || 0,
-            }),
-          })
-            .then(
-              (result) => result.json(),
-              () => ({})
-            )
-            .then(
-              (result) =>
-                result?.transactions?.map((transaction: any) => {
-                  const claim = JSON.parse(atob(transaction.value.execute_msg))
-                  return {
-                    ...claim.claim,
-                    contract: transaction.value.contract,
-                  }
-                }) || []
-            )
+          const data = drops.claimableAirdrops.map((drop: any) => ({
+            contract: drop.address,
+            stage: drop.stage,
+            proof: drop.merkleProof,
+            amount: drop.airdropMineAmount,
+          }))
           return {
             value,
             count: data.length,
