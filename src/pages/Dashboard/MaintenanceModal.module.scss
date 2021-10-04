@@ -1,0 +1,40 @@
+@import "mixins";
+@import "variables";
+
+.modal {
+  width: 450px;
+
+  > div {
+    max-width: unset;
+  }
+
+  .card {
+    > section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 45px 70px 55px !important;
+      text-align: center;
+
+      @include mobile {
+        padding: 24px !important;
+      }
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 22px;
+      line-height: 27px;
+      color: black;
+      margin-bottom: 20px;
+    }
+
+    .message {
+      width: 100%;
+      color: #a74f4f;
+      font-size: 12px;
+      line-height: 14px;
+      font-weight: 500;
+    }
+  }
+}
