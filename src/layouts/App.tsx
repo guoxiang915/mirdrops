@@ -8,6 +8,8 @@ import Header from "./Header"
 import "./App.scss"
 import { ClaimProvider, useClaimState } from "../hooks/useClaim"
 import Footer from "./Footer"
+import { IS_MAINTENANCE } from "./../constants"
+import MaintenanceModal from "../pages/Dashboard/MaintenanceModal"
 
 const App = () => {
   const address = useAddress()
@@ -23,6 +25,8 @@ const App = () => {
           <Header />
           <Container>{routes()}</Container>
           <Footer />
+
+          {IS_MAINTENANCE && <MaintenanceModal />}
         </ClaimProvider>
       </StatsProvider>
     </ContractProvider>
