@@ -1,5 +1,5 @@
 /* maintenance mode */
-export const IS_MAINTENANCE = true
+export const IS_MAINTENANCE = false
 
 /* terra:network */
 export const FINDER = "https://finder.terra.money"
