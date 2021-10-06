@@ -155,7 +155,7 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
             contract: drop.address,
             stage: drop.stage,
             proof: drop.merkleProof,
-            amount: drop.airdropMineAmount,
+            amount: toAmount(drop.airdropMineAmount || 0),
           }))
           return {
             value,
