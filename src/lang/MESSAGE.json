@@ -19,6 +19,6 @@
   },
 
   "App": {
-    "TestnetAlert": "You are currently on the \"tequila-0004\" network which is not the mainnet."
+    "TestnetAlert": "You are currently on the \"bombay\" network which is not the mainnet."
   }
 }
