@@ -11,7 +11,7 @@ import {
   GET_MIRROR_LUNA_DROPS,
   GET_MIRROR_PRICE,
 } from "./gqldocs"
-import { DROPS_CHAIN_ID } from "../constants"
+import { ANC_DROPS_CHAIN_ID } from "../constants"
 import { toAmount } from "../libs/parse"
 import { div, plus, times } from "../libs/math"
 
@@ -102,7 +102,7 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
         }
         case "Anchor": {
           const drops = await fetch(
-            `${drop.api}/get?address=${address}&chainId=${DROPS_CHAIN_ID}`
+            `${drop.api}/get?address=${address}&chainId=${ANC_DROPS_CHAIN_ID}`
           ).then((result) => result.json())
           //  .then((result) => result.filter((drop: any) => drop.claimable))
 
