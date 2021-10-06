@@ -151,9 +151,9 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
             () => ({})
           )
           const claimable = await Promise.all(
-            drops.claimableAirdrops.map(async (drop: any) => {
+            drops.claimableAirdrops.map(async (item: any) => {
               const result = await fetch(
-                `https://lcd.terra.dev/wasm/contracts/${address}/store?query_msg={"is_claimed":{"stage":${drop.stage},"address":"${drop.address}"}}`
+                `https://lcd.terra.dev/wasm/contracts/${drop.airdrop}/store?query_msg={"is_claimed":{"stage":${item.stage},"address":"${item.address}"}}`
               ).then(
                 (result) => result.json(),
                 () => ({})
