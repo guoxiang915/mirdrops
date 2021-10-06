@@ -150,13 +150,29 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
             (result) => result.json(),
             () => ({})
           )
-          const value = toAmount(drops.amount || 0)
-          const data = drops.claimableAirdrops.map((drop: any) => ({
-            contract: drop.address,
-            stage: drop.stage,
-            proof: drop.merkleProof,
-            amount: toAmount(drop.airdropMineAmount || 0),
-          }))
+          const claimable = await Promise.all(
+            drops.claimableAirdrops.map(async (drop: any) => {
+              const result = await fetch(
+                `https://lcd.terra.dev/wasm/contracts/${address}/store?query_msg={"is_claimed":{"stage":${drop.stage},"address":"${drop.address}"}}`
+              ).then(
+                (result) => result.json(),
+                () => ({})
+              )
+              return !result.result.is_claimed
+            })
+          )
+          let value = "0"
+          const data = drops.claimableAirdrops
+            .filter((drop: any, index: number) => claimable[index])
+            .map((drop: any) => {
+              value = plus(value, toAmount(drop.airdropMineAmount || 0))
+              return {
+                contract: drop.address,
+                stage: drop.stage,
+                proof: drop.merkleProof,
+                amount: toAmount(drop.airdropMineAmount || 0),
+              }
+            })
           return {
             value,
             count: data.length,
