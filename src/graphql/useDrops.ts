@@ -42,7 +42,7 @@ export const getPrice = async (drop: TerraDrop) => {
           return result.data?.asset?.prices?.price || "1"
         }
         case "Anchor": {
-          const ancPriceUrl = "https://mantle.anchorprotocol.com/?anc--price"
+          const ancPriceUrl = "https://mantle.terra.dev/"
           const client = getDropClient(ancPriceUrl)
           const result = await client.query({
             query: GET_ANCHOR_PRICE,
