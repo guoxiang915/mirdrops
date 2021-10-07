@@ -1,5 +1,5 @@
 /* maintenance mode */
-export const IS_MAINTENANCE = true
+export const IS_MAINTENANCE = false
 
 /* terra:network */
 export const FINDER = "https://finder.terra.money"
@@ -22,9 +22,5 @@ export const TX_POLLING_INTERVAL = 1000
 export const GAS_MAX_AMOUNT = 10000000
 
 /* pool:settings */
-export const DROPS_CHAIN_ID = "columbus-4"
-export const POOL_REWARDS_CONTRACT =
-  "terra10dx7437572d6t49zh9hgpjwq85p5mvj0awas5k"
-/* sentry */
-export const DSN =
-  "https://cc0de0861517412099365103406cd95a@o685072.ingest.sentry.io/5813425"
+export const DROPS_CHAIN_ID = "columbus-5"
+export const ANC_DROPS_CHAIN_ID = "columbus-4"

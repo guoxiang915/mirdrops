@@ -11,7 +11,7 @@ import {
   GET_MIRROR_LUNA_DROPS,
   GET_MIRROR_PRICE,
 } from "./gqldocs"
-import { DROPS_CHAIN_ID } from "../constants"
+import { ANC_DROPS_CHAIN_ID } from "../constants"
 import { toAmount } from "../libs/parse"
 import { div, plus, times } from "../libs/math"
 
@@ -42,7 +42,7 @@ export const getPrice = async (drop: TerraDrop) => {
           return result.data?.asset?.prices?.price || "1"
         }
         case "Anchor": {
-          const ancPriceUrl = "https://mantle.anchorprotocol.com/?anc--price"
+          const ancPriceUrl = "https://mantle.terra.dev/"
           const client = getDropClient(ancPriceUrl)
           const result = await client.query({
             query: GET_ANCHOR_PRICE,
@@ -70,7 +70,7 @@ export const getPrice = async (drop: TerraDrop) => {
         }
       }
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error)
   }
 
@@ -102,11 +102,11 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
         }
         case "Anchor": {
           const drops = await fetch(
-            `${drop.api}/get?address=${address}&chainId=${DROPS_CHAIN_ID}`
+            `${drop.api}/get?address=${address}&chainId=${ANC_DROPS_CHAIN_ID}`
           ).then((result) => result.json())
           //  .then((result) => result.filter((drop: any) => drop.claimable))
 
-          const ancMantleUrl = "https://mantle.anchorprotocol.com"
+          const ancMantleUrl = "https://mantle.terra.dev"
           const ancClient = getDropClient(ancMantleUrl)
 
           const filteredDrops: any[] = []
@@ -150,28 +150,29 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
             (result) => result.json(),
             () => ({})
           )
-          const value = toAmount(drops.amount || 0)
-          const data = await fetch(`${drop.api}/airdrop/${address}/claim`, {
-            method: "POST",
-            body: JSON.stringify({
-              address,
-              amount: drops.amount || 0,
-            }),
-          })
-            .then(
-              (result) => result.json(),
-              () => ({})
-            )
-            .then(
-              (result) =>
-                result?.transactions?.map((transaction: any) => {
-                  const claim = JSON.parse(atob(transaction.value.execute_msg))
-                  return {
-                    ...claim.claim,
-                    contract: transaction.value.contract,
-                  }
-                }) || []
-            )
+          const claimable = await Promise.all(
+            drops.claimableAirdrops.map(async (item: any) => {
+              const result = await fetch(
+                `https://lcd.terra.dev/wasm/contracts/${drop.airdrop}/store?query_msg={"is_claimed":{"stage":${item.stage},"address":"${item.address}"}}`
+              ).then(
+                (result) => result.json(),
+                () => ({})
+              )
+              return !result.result.is_claimed
+            })
+          )
+          let value = "0"
+          const data = drops.claimableAirdrops
+            .filter((drop: any, index: number) => claimable[index])
+            .map((drop: any) => {
+              value = plus(value, toAmount(drop.airdropMineAmount || 0))
+              return {
+                contract: drop.address,
+                stage: drop.stage,
+                proof: drop.merkleProof,
+                amount: toAmount(drop.airdropMineAmount || 0),
+              }
+            })
           return {
             value,
             count: data.length,

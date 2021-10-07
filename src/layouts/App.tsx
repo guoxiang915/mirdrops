@@ -1,8 +1,6 @@
 import routes from "../routes"
 import Container from "../components/Container"
 import { ContractProvider, useContractState } from "../hooks/useContract"
-import { StatsProvider, useStatsState } from "../statistics/useStats"
-import useConnectGraph from "../hooks/useConnectGraph"
 import useAddress from "../hooks/useAddress"
 import Header from "./Header"
 import "./App.scss"
@@ -14,21 +12,17 @@ import MaintenanceModal from "../pages/Dashboard/MaintenanceModal"
 const App = () => {
   const address = useAddress()
   const contract = useContractState(address)
-  const stats = useStatsState()
   const claim = useClaimState()
-  useConnectGraph(address)
 
   return (
     <ContractProvider value={contract}>
-      <StatsProvider value={stats}>
-        <ClaimProvider value={claim}>
-          <Header />
-          <Container>{routes()}</Container>
-          <Footer />
+      <ClaimProvider value={claim}>
+        <Header />
+        <Container>{routes()}</Container>
+        <Footer />
 
-          {IS_MAINTENANCE && <MaintenanceModal />}
-        </ClaimProvider>
-      </StatsProvider>
+        {IS_MAINTENANCE && <MaintenanceModal />}
+      </ClaimProvider>
     </ContractProvider>
   )
 }
