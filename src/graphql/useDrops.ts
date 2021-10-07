@@ -106,7 +106,7 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
           ).then((result) => result.json())
           //  .then((result) => result.filter((drop: any) => drop.claimable))
 
-          const ancMantleUrl = "https://mantle.anchorprotocol.com"
+          const ancMantleUrl = "https://mantle.terra.dev"
           const ancClient = getDropClient(ancMantleUrl)
 
           const filteredDrops: any[] = []
