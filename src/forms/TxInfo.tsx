@@ -1,4 +1,5 @@
 // import { formatAsset } from "../libs/parse"
+import ResultFooter from "./ResultFooter"
 import TxHash from "./TxHash"
 import styles from "./TxInfo.module.scss"
 
@@ -55,12 +56,7 @@ const TxInfo = ({ txInfo, parser }: Props) => {
       )}
 
       <footer className={styles.footer}>
-        {footer.map(({ title, content }) => (
-          <article className={styles.row} key={title}>
-            <h1 className={styles.title}>{title}</h1>
-            <p className={styles.content}>{content}</p>
-          </article>
-        ))}
+        <ResultFooter list={footer} />
       </footer>
     </>
   )

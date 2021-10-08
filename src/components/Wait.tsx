@@ -35,7 +35,7 @@ const Wait: FC<Props> = ({
     defaultTitle ||
     {
       [STATUS.SUCCESS]: "Complete!",
-      [STATUS.LOADING]: "Wait for receipt...",
+      [STATUS.LOADING]: "Broadcasting transaction...",
       [STATUS.FAILURE]: "Failed",
     }[status]
 
