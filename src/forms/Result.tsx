@@ -11,6 +11,7 @@ import Wait, { STATUS } from "../components/Wait"
 import TxHash from "./TxHash"
 import TxInfo from "./TxInfo"
 import { LinkProps } from "../components/LinkButton"
+import Broadcasting from "./Broadcasting"
 
 interface Props extends PostResponse {
   parseTx: ResultParser
@@ -88,7 +89,7 @@ const Result = ({ success, result, error, ...props }: Props) => {
 
   const content = {
     [STATUS.SUCCESS]: txInfo && <TxInfo txInfo={txInfo} parser={parseTx} />,
-    [STATUS.LOADING]: null,
+    [STATUS.LOADING]: <Broadcasting txhash={hash} />,
     [STATUS.FAILURE]: message,
   }[status]
 
