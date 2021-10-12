@@ -200,13 +200,33 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
               })
             ).data?.airdropLuna || []
 
-          const drops = [
+          let drops = [
             ...mirDrops.map((item: any) => ({ ...item, key: "claim_for_mir" })),
             ...lunaDrops.map((item: any) => ({
               ...item,
               key: "claim_for_luna",
             })),
           ].filter((item: any) => item.claimable)
+
+          const claimable = await Promise.all(
+            drops.map(async (item: any) => {
+              const result = await fetch(
+                `https://bombay-lcd.terra.dev/wasm/contracts/${
+                  drop.airdrop
+                }/store?query_msg={"${
+                  item.key === "claim_for_mir"
+                    ? "is_claimed_mir"
+                    : "is_claimed_luna"
+                }":{"address":"${item.address}","stage":${item.stage}}}`
+              ).then(
+                (result) => result.json(),
+                () => ({})
+              )
+              return !result?.result.is_claimed
+            })
+          )
+
+          drops = drops.filter((drop: any, index: number) => claimable[index])
 
           const value = drops.reduce(
             (prev: string, drop: any) => plus(prev, drop.amount),
