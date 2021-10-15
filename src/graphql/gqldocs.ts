@@ -107,7 +107,7 @@ export const GET_MIRROR_PRICE = gql`
 `
 
 export const GET_MIRROR_MIR_DROPS = gql`
-  query mirrorMirDrops($address: ID!) {
+  query mirrorMirDrops($address: String!) {
     airdropMir(address: $address) {
       stage
       amount
@@ -118,12 +118,23 @@ export const GET_MIRROR_MIR_DROPS = gql`
 `
 
 export const GET_MIRROR_LUNA_DROPS = gql`
-  query mirrorLunaDrops($address: ID!) {
+  query mirrorLunaDrops($address: String!) {
     airdropLuna(address: $address) {
       stage
       amount
       claimable
       proof
+    }
+  }
+`
+
+export const GET_NEXUS_DROPS = gql`
+  query nexusDrops($address: String!) {
+    findAirdropsByAddress(address: $address) {
+      claimable
+      claimablePsiTokens
+      proofs
+      stage
     }
   }
 `

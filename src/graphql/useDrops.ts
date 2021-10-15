@@ -10,6 +10,7 @@ import {
   GET_MIRROR_MIR_DROPS,
   GET_MIRROR_LUNA_DROPS,
   GET_MIRROR_PRICE,
+  GET_NEXUS_DROPS,
 } from "./gqldocs"
 import { ANC_DROPS_CHAIN_ID } from "../constants"
 import { toAmount } from "../libs/parse"
@@ -68,6 +69,24 @@ export const getPrice = async (drop: TerraDrop) => {
 
           return String(result.data?.MirrorTokenInfo?.price)
         }
+        case "Nexus Protocol": {
+          const response = await fetch(
+            `https://lcd.terra.dev/wasm/contracts/${drop.token}/store?query_msg={"pool":{}}`
+          ).then((response) => response.json())
+
+          const { assets } = response.result
+
+          return div(assets[1].amount || "0", assets[0].amount || "1")
+        }
+        case "Valkyrie Protocol": {
+          const response = await fetch(
+            `https://lcd.terra.dev/wasm/contracts/${drop.token}/store?query_msg={"pool":{}}`
+          ).then((response) => response.json())
+
+          const { assets } = response.result
+
+          return div(assets[1].amount || "0", assets[0].amount || "1")
+        }
       }
     }
   } catch (error: any) {
@@ -80,6 +99,7 @@ export const getPrice = async (drop: TerraDrop) => {
 export const getDrops = async (address: string, drop: TerraDrop) => {
   try {
     const price = await getPrice(drop)
+    console.log(drop, price)
     if (price && address && drop.api) {
       switch (drop.protocol) {
         case "Mirror": {
@@ -238,6 +258,59 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
             count: drops.length,
             ust: times(value, price),
             data: drops,
+          }
+        }
+        case "Nexus Protocol": {
+          const client = getDropClient(drop.api)
+          const drops = await client.query({
+            query: GET_NEXUS_DROPS,
+            variables: { address },
+            fetchPolicy: "no-cache",
+          })
+          const data = (
+            drops.data?.findAirdropsByAddress?.map((item: any) => ({
+              amount: item.claimablePsiTokens,
+              claimable: item.claimable,
+              proof: item.proofs,
+              stage: item.stage,
+            })) || []
+          ).filter((item: any) => item.claimable)
+          const value = data.reduce(
+            (prev: string, drop: any) => plus(prev, drop.amount),
+            "0"
+          )
+          return {
+            value,
+            count: data.length || 0,
+            ust: times(value, price),
+            data,
+          }
+        }
+        case "Valkyrie Protocol": {
+          const drops = await fetch(
+            `${drop.api}/airdrop?wallet_address=${address}&filter=CLAIMABLE`
+          ).then(
+            (result) => result.json(),
+            () => ({})
+          )
+          const data = (
+            drops.data.items.map((item: any) => ({
+              amount: item.airdropAmount,
+              claimable: item.isClaimable,
+              proof: item.merkleProof,
+              stage: item.stage,
+            })) || []
+          ).filter((item: any) => item.claimable)
+
+          const value = data.reduce(
+            (prev: string, drop: any) => plus(prev, drop.amount),
+            "0"
+          )
+          return {
+            value,
+            count: data.length || 0,
+            ust: times(value, price),
+            data,
           }
         }
       }

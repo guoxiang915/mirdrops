@@ -18,6 +18,7 @@ import ConnectListModal from "../layouts/ConnectListModal"
 
 const Dashboard = () => {
   const address = useAddress()
+  // const address = 'terra1zuzx9re9ygf86ytmkqeah45mu9jdqj423sd4dy'
   const { main, soon } = useDropslist()
   const [comingSoon, setComingSoon] = useState(true)
   const [total, setTotal] = useState<string>("0")

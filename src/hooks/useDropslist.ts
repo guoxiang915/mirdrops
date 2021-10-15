@@ -11,11 +11,14 @@ export const useDropslist = () => {
   })
 
   useEffect(() => {
-    fetch("https://whitelist.mirdrops.io/airdrops.json").then((result) => {
-      if (result.status === 200) {
-        result.json().then((json) => setDrops(json))
+    // fetch("https://whitelist.mirdrops.io/airdrops.json").then((result) => {
+    fetch("https://whitelist.mirdrops.io/airdrops-staging.json").then(
+      (result) => {
+        if (result.status === 200) {
+          result.json().then((json) => setDrops(json))
+        }
       }
-    })
+    )
   }, [])
 
   return {
