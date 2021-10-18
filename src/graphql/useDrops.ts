@@ -15,6 +15,7 @@ import {
 import { ANC_DROPS_CHAIN_ID } from "../constants"
 import { toAmount } from "../libs/parse"
 import { div, plus, times } from "../libs/math"
+import { UUSD } from "./../constants"
 
 export const getDropClient = (api: string) =>
   new ApolloClient({
@@ -31,62 +32,66 @@ export const getDropClient = (api: string) =>
 
 export const getPrice = async (drop: TerraDrop) => {
   try {
-    if (drop.api) {
-      switch (drop.protocol) {
-        case "Mirror": {
-          const client = getDropClient(drop.api)
-          const result = await client.query({
-            query: GET_MIRROR_PRICE,
-            variables: { token: drop.token },
-            fetchPolicy: "no-cache",
-          })
-          return result.data?.asset?.prices?.price || "1"
-        }
-        case "Anchor": {
-          const ancPriceUrl = "https://mantle.terra.dev/"
-          const client = getDropClient(ancPriceUrl)
-          const result = await client.query({
-            query: GET_ANCHOR_PRICE,
-            variables: {
-              ANCTerraswap: drop.token,
-              poolInfoQuery: '{"pool":{}}',
-            },
-            fetchPolicy: "no-cache",
-          })
-          const { assets } = JSON.parse(result.data?.ancPrice.Result)
+    switch (drop.protocol) {
+      case "Mirror": {
+        const client = getDropClient(drop.api || "")
+        const result = await client.query({
+          query: GET_MIRROR_PRICE,
+          variables: { token: drop.token },
+          fetchPolicy: "no-cache",
+        })
+        return result.data?.asset?.prices?.price || "1"
+      }
+      case "Anchor": {
+        const ancPriceUrl = "https://mantle.terra.dev/"
+        const client = getDropClient(ancPriceUrl)
+        const result = await client.query({
+          query: GET_ANCHOR_PRICE,
+          variables: {
+            ANCTerraswap: drop.token,
+            poolInfoQuery: '{"pool":{}}',
+          },
+          fetchPolicy: "no-cache",
+        })
+        const { assets } = JSON.parse(result.data?.ancPrice.Result)
 
-          return div(assets[1].amount || "0", assets[0].amount || "1")
-        }
-        case "Pylon": {
-          const result = await fetch(`${drop.api}/overview`).then((response) =>
-            response.json()
-          )
-          return String(result.priceInUst)
-        }
-        case "Mirror": {
-          const client = getDropClient(drop.api)
-          const result = await client.query({ query: GET_MIRROR_PRICE })
+        return div(assets[1].amount || "0", assets[0].amount || "1")
+      }
+      case "Pylon": {
+        const result = await fetch(`${drop.api}/overview`).then((response) =>
+          response.json()
+        )
+        return String(result.priceInUst)
+      }
+      case "Mirror": {
+        const client = getDropClient(drop.api || "")
+        const result = await client.query({ query: GET_MIRROR_PRICE })
 
-          return String(result.data?.MirrorTokenInfo?.price)
-        }
-        case "Nexus Protocol": {
-          const response = await fetch(
-            `https://lcd.terra.dev/wasm/contracts/${drop.token}/store?query_msg={"pool":{}}`
-          ).then((response) => response.json())
+        return String(result.data?.MirrorTokenInfo?.price)
+      }
+      case "Nexus Protocol": {
+        const response = await fetch(
+          `https://lcd.terra.dev/wasm/contracts/${drop.token}/store?query_msg={"pool":{}}`
+        ).then((response) => response.json())
 
-          const { assets } = response.result
+        const { assets } = response.result
 
-          return div(assets[1].amount || "0", assets[0].amount || "1")
-        }
-        case "Valkyrie Protocol": {
-          const response = await fetch(
-            `https://lcd.terra.dev/wasm/contracts/${drop.token}/store?query_msg={"pool":{}}`
-          ).then((response) => response.json())
+        return div(assets[1].amount || "0", assets[0].amount || "1")
+      }
+      case "Valkyrie Protocol": {
+        const response = await fetch(
+          `https://lcd.terra.dev/wasm/contracts/${drop.token}/store?query_msg={"pool":{}}`
+        ).then((response) => response.json())
 
-          const { assets } = response.result
+        const { assets } = response.result
 
-          return div(assets[1].amount || "0", assets[0].amount || "1")
-        }
+        return div(assets[1].amount || "0", assets[0].amount || "1")
+      }
+      case "Luna Staking Rewards": {
+        const response = await fetch(
+          "https://lcd.terra.dev/oracle/denoms/exchange_rates"
+        ).then((response) => response.json())
+        return response.result.find((item: any) => item.denom === UUSD).amount
       }
     }
   } catch (error: any) {
@@ -99,11 +104,10 @@ export const getPrice = async (drop: TerraDrop) => {
 export const getDrops = async (address: string, drop: TerraDrop) => {
   try {
     const price = await getPrice(drop)
-    console.log(drop, price)
-    if (price && address && drop.api) {
+    if (price && address) {
       switch (drop.protocol) {
         case "Mirror": {
-          const client = getDropClient(drop.api)
+          const client = getDropClient(drop.api || "")
           const drops = await client.query({
             query: GET_MIRROR_DROPS,
             variables: { address: address, network: "TERRA" },
@@ -201,7 +205,7 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
           }
         }
         case "Mirror": {
-          const client = getDropClient(drop.api)
+          const client = getDropClient(drop.api || "")
           const mirDrops =
             (
               await client.query({
@@ -261,7 +265,7 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
           }
         }
         case "Nexus Protocol": {
-          const client = getDropClient(drop.api)
+          const client = getDropClient(drop.api || "")
           const drops = await client.query({
             query: GET_NEXUS_DROPS,
             variables: { address },
@@ -304,6 +308,23 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
 
           const value = data.reduce(
             (prev: string, drop: any) => plus(prev, drop.amount),
+            "0"
+          )
+          return {
+            value,
+            count: data.length || 0,
+            ust: times(value, price),
+            data,
+          }
+        }
+        case "Luna Staking Rewards": {
+          const response = await fetch(
+            `https://fcd.terra.dev/v1/staking/${address}`
+          ).then((result) => result.json())
+          const data = response.myDelegations
+
+          const value = data.reduce(
+            (prev: string, drop: any) => plus(prev, drop.totalReward),
             "0"
           )
           return {

@@ -134,6 +134,7 @@ const Dashboard = () => {
                   ? "All"
                   : `${claimDrops[0].protocol} Airdrop`
               }`}
+              address={address}
               drops={Object.values(claimDrops)}
               onSuccess={() => {
                 claimModal.close()

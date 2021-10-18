@@ -8,18 +8,22 @@ import styles from "./ClaimModal.module.scss"
 import useNewContractMsg from "../../terra/useNewContractMsg"
 import { TerraDrop } from "./AirdropCard"
 import Confirm from "../../components/Confirm"
-import { MsgExecuteContract } from "@terra-money/terra.js"
+import {
+  MsgExecuteContract,
+  MsgWithdrawDelegationReward,
+} from "@terra-money/terra.js"
 import { plus, gt } from "../../libs/math"
 import useFee from "../../hooks/useFee"
 
 interface Props {
   title: string
   modal: Modal
-  onSuccess?: () => void
+  address: string
   drops: TerraDrop[]
+  onSuccess?: () => void
 }
 
-const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
+const ClaimModal = ({ title, modal, address, drops, onSuccess }: Props) => {
   let amounts = drops
     .filter((drop) => gt(drop.value || "0", "0"))
     .map((drop, index) => ({
@@ -50,27 +54,38 @@ const ClaimModal = ({ title, modal, drops, onSuccess }: Props) => {
   drops.forEach((drop) => {
     totalAmount = plus(drop.ust || "0", totalAmount)
     drop.data?.forEach((item: any) => {
-      data.push(
-        drop.protocol === "Mirror"
-          ? newContractMsg(drop.airdrop || "", {
-              [item.key]: {
-                stage: item.stage,
-                amount: item.amount,
-                proof: Array.isArray(item.proof)
-                  ? item.proof
-                  : JSON.parse(item.proof),
-              },
-            })
-          : newContractMsg(drop.airdrop || "", {
-              claim: {
-                stage: item.stage,
-                amount: item.amount,
-                proof: Array.isArray(item.proof)
-                  ? item.proof
-                  : JSON.parse(item.proof),
-              },
-            })
-      )
+      let contractMsg: any = null
+      switch (drop.protocol) {
+        case "Mirror":
+          contractMsg = newContractMsg(drop.airdrop || "", {
+            [item.key]: {
+              stage: item.stage,
+              amount: item.amount,
+              proof: Array.isArray(item.proof)
+                ? item.proof
+                : JSON.parse(item.proof),
+            },
+          })
+          break
+        case "Luna Staking Rewards":
+          contractMsg = new MsgWithdrawDelegationReward(
+            address,
+            item.validatorAddress[0]
+          )
+          break
+        default:
+          contractMsg = newContractMsg(drop.airdrop || "", {
+            claim: {
+              stage: item.stage,
+              amount: item.amount,
+              proof: Array.isArray(item.proof)
+                ? item.proof
+                : JSON.parse(item.proof),
+            },
+          })
+          break
+      }
+      data.push(contractMsg)
     })
   })
 

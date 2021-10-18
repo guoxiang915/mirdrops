@@ -131,7 +131,6 @@ export const GET_MIRROR_LUNA_DROPS = gql`
 export const GET_NEXUS_DROPS = gql`
   query nexusDrops($address: String!) {
     findAirdropsByAddress(address: $address) {
-      claimable
       claimablePsiTokens
       proofs
       stage

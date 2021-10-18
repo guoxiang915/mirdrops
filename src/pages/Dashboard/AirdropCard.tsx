@@ -31,18 +31,12 @@ interface Props {
 }
 
 const AirdropCard = ({ drop, onClaim, address, onLoad }: Props) => {
-  const coming = !drop.token
+  const coming = !drop.token && !(drop as any).fcd
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const getDropValues = async () => {
-      if (
-        address &&
-        drop.api &&
-        drop.value === undefined &&
-        onLoad &&
-        !loading
-      ) {
+      if (address && drop.value === undefined && onLoad && !loading) {
         setLoading(true)
         const result = await getDrops(address, drop)
         onLoad?.({
@@ -56,7 +50,7 @@ const AirdropCard = ({ drop, onClaim, address, onLoad }: Props) => {
       }
     }
 
-    if (address && drop.api && drop.value === undefined && onLoad && !loading) {
+    if (address && drop && drop.value === undefined && onLoad && !loading) {
       getDropValues()
     }
   }, [address, drop, onLoad, loading])
