@@ -270,7 +270,7 @@ export const getDrops = async (address: string, drop: TerraDrop) => {
           const data = (
             drops.data?.findAirdropsByAddress?.map((item: any) => ({
               amount: item.claimablePsiTokens,
-              claimable: item.claimable,
+              claimable: true,
               proof: item.proofs,
               stage: item.stage,
             })) || []
