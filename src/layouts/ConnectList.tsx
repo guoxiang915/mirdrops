@@ -22,11 +22,11 @@ const ConnectList = () => {
         : []
     )
     .concat(
-      availableConnectTypes.includes(ConnectType.WEBEXTENSION)
+      availableConnectTypes.includes(ConnectType.WEB_CONNECT)
         ? {
             label: "Terra Station (extension)",
             image: <Terra {...size} />,
-            onClick: () => connect(ConnectType.WEBEXTENSION),
+            onClick: () => connect(ConnectType.WEB_CONNECT),
           }
         : availableConnectTypes.includes(ConnectType.CHROME_EXTENSION)
         ? {
